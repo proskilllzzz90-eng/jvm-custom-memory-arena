@@ -14,11 +14,29 @@ public class Main {
 
         int d = arena.alloc(4);
         System.out.println("address of d: " + d);
+        System.out.println("total capacity: " + arena.capacity());
+        System.out.println("used capacity: " + arena.used());
+        System.out.println("remaining capacity: " + arena.remaining());
 
-        System.out.println(arena.capacity());
+        int x = 1024;
+        int next = (x >>> 24) & 0xFF;
+        int next1 = (x >>> 16) & 0xFF;
+        int next2 = (x >>> 8) & 0xFF;
+        int next3 = (x >>> 0) & 0xFF;
+        System.out.println(Integer.toHexString(x));
+        System.out.println(next + " " + next1 + " " + next2 + " " + next3);
+        
+        //big endian byte manip
+        arena.putInt(0, 0x12345678);
+        System.out.println(Integer.toHexString(0x12345678)); 
 
-        System.out.println(arena.used());
+        System.out.println(Integer.toHexString(arena.memory[0]));
+        System.out.println(Integer.toHexString(arena.memory[1]));
+        System.out.println(Integer.toHexString(arena.memory[2]));
+        System.out.println(Integer.toHexString(arena.memory[3]));
 
-        System.out.println(arena.remaining());
+        // big endian byte read
+        System.out.print(Integer.toHexString(arena.getInt(0)));
+
     }
 }

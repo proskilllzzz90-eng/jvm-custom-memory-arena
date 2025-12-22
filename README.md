@@ -1,12 +1,8 @@
-# JVM Custom Memory Arena (Learning Project)
+# JVM Custom Memory Arena
 
 This project is a from-scratch, educational implementation of a manual memory arena in Java, built to understand how low-level memory, pointers, and data structures actually work beneath high-level language abstractions.
+
  
-The goal is to learn how memory and garbage collection (GC) works by explicitly managing it.
-
-This repository documents that learning process through a progressively built system.
-
----
 
 ## Motivation
 
@@ -22,7 +18,7 @@ Everything here is built on top of a single `byte[]`, and all structures, safety
 
 The design emphasizes explicit control and fail-fast behavior so that incorrect assumptions about memory usage surface immediately.
 
----
+ 
 
 ## Project Overview
 
@@ -36,7 +32,7 @@ At its core, this project implements a **manual memory arena**:
 
 The project incrementally builds higher-level behavior on top of this foundation in a controlled and well-defined manner.
 
----
+ 
 
 ## Core Concepts Implemented
 
@@ -57,7 +53,7 @@ Rules:
 
 This mirrors modern arena allocators used in professional systems programming.
 
----
+ 
 
 ### 2. Strict Allocation Model
 
@@ -69,7 +65,7 @@ This project uses a strict safety model:
 
 This forces correct reasoning and makes bugs obvious.
 
----
+ 
 
 ### 3. Primitive Storage (Big Endian)
 
@@ -84,7 +80,7 @@ Example: storing an `int`
 
 This makes integer representation and endianness explicit instead of implicit.
 
----
+ 
 
 ### 4. Struct-like Layouts (Nodes)
 
@@ -110,7 +106,7 @@ A node is simply:
 
 This mirrors C-style structs and pointers.
 
----
+ 
 
 ### 5. Pointers and Sentinel Values
 
@@ -125,7 +121,7 @@ Rules:
 
 This makes pointer semantics explicit and visible.
 
----
+ 
 
 ### 6. Data Structures Built from Raw Memory
 
@@ -138,7 +134,7 @@ Using the node layout, the project implements a linked list:
 
 This demonstrates how high-level data structures emerge from low-level memory rules.
 
----
+ 
 
 ## Safety Mechanisms
 
@@ -152,7 +148,7 @@ Ensures:
 
 Used for primitive reads and writes.
 
----
+ 
 
 ### `checkNodePtr(ptr)`
 
@@ -162,7 +158,7 @@ Ensures:
 
 Used for all node-based operations.
 
----
+ 
 
 ## Scope and Design Constraints
 
@@ -174,7 +170,7 @@ Used for all node-based operations.
 
 The implementation prioritizes clarity, correctness, and explicit control over performance or feature completeness.
 
----
+ 
 
 ## What This Project Teaches
 
@@ -185,7 +181,7 @@ The implementation prioritizes clarity, correctness, and explicit control over p
 - How data structures are built from raw memory
 - Why high-level languages feel safe
 
----
+ 
 
 ## Current Capabilities
 
@@ -196,7 +192,7 @@ The implementation prioritizes clarity, correctness, and explicit control over p
 - Pointer validation
 - Linked list traversal
 
----
+ 
 
 ## Planned Next Steps
 
@@ -207,7 +203,7 @@ The implementation prioritizes clarity, correctness, and explicit control over p
 - Unit tests for failure cases
 - Memory layout diagrams
 
----
+ 
 
 ## Audience
 
@@ -217,7 +213,7 @@ This project is intended for:
 - Students studying memory management, data layout, or low-level runtime behavior
 - Engineers who want a concrete model for how high-level abstractions map to raw memory
 
----
+ 
 
 ## Final Note
 

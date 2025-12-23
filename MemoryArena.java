@@ -1,26 +1,48 @@
 public class MemoryArena {
     public final byte[] memory;
     private int offset = 0;
-
-    private int NODE_SIZE = 8;
-    private int VALUE_OFFSET = 0;
-    private int NEXT_OFFSET = 4;
+    private int alignmentWaste = 0;
 
     public MemoryArena(int size) {
         memory = new byte[size];
     }
 
+    public int align(int addr, int alignment) {
+        if (alignment <= 0) {
+            return addr;
+        }
+        int remainder = addr % alignment;
+        if (remainder == 0) {
+            return addr;
+        }
+        return addr + (alignment - remainder);
+    }
+
     public int alloc(int size) {
         if (offset + size > memory.length) {
-            throw new RuntimeException("Out of memory!");
+            throw new OutOfMemoryException(size, remaining(), capacity(), offset);
         }
         int start = offset;
         offset += size;
         return start;
     }
 
+    public int allocAligned(int size, int alignment) {
+        int alignedOffset = align(offset, alignment);
+        int waste = alignedOffset - offset;
+        
+        if (alignedOffset + size > memory.length) {
+            throw new OutOfMemoryException(size, remaining(), capacity(), offset);
+        }
+        
+        alignmentWaste += waste;
+        offset = alignedOffset + size;
+        return alignedOffset;
+    }
+
     public void reset() {
         offset = 0;
+        alignmentWaste = 0;
     }
 
     public int capacity() {
@@ -36,14 +58,15 @@ public class MemoryArena {
     }
 
     public void putByte(int addr, byte x) {
+        checkAddr(addr, 1);
         memory[addr] = x;
     }
 
     public byte getByte(int addr) {
+        checkAddr(addr, 1);
         return memory[addr];
     }
 
-    //big endian approach
     public void putInt(int addr, int x) {
         int[] bytes = {(x >>> 24) & 0xFF, (x >>> 16) & 0xFF, (x >>> 8) & 0xFF, (x >>> 0) & 0xFF};
         checkAddr(addr, 4);
@@ -58,55 +81,18 @@ public class MemoryArena {
         return reconstruct;
     }
 
-    //node creation & manip
-    public int createNode(int val) {
-        int nodeAddr = alloc(8);
-        putInt(nodeAddr + VALUE_OFFSET, val);
-        putInt(nodeAddr + NEXT_OFFSET, -1);
-
-        return nodeAddr;
-    }
-
-    public int getValue(int nodeAddr) {
-        return getInt(nodeAddr + VALUE_OFFSET);
-    }
-
-    public void setNext(int nodeAddr, int nextAddr) {
-        checkAddr(nodeAddr, 4);
-        checkNodePtr(nextAddr);
-        putInt(nodeAddr + NEXT_OFFSET, nextAddr);
-    }
-
-    public int getNext(int nodeAddr) {
-        return getInt(nodeAddr + NEXT_OFFSET);
-    }
-
-    public void printList(int headAddr) {
-        if (headAddr == -1) {
-            return;
-        } else if (checkNodePtr(headAddr)) {
-            System.out.print(getValue(headAddr) + " "); 
-            while (getNext(headAddr) != -1 && checkNodePtr(getNext(headAddr))) {
-                headAddr = getNext(headAddr);
-                System.out.print(getValue(headAddr) + " ");
-            }
-        }
-    }
-
     public boolean checkAddr(int addr, int bytesNeeded) {
-        if (addr >= 0 && addr + bytesNeeded <= offset) return true;
-        throw new RuntimeException("Not enough memory!");
-    }
-
-    public boolean checkNodePtr(int ptr) {
-        if (ptr == -1) {
+        if (addr >= 0 && addr + bytesNeeded <= offset) {
             return true;
         }
-        if (ptr >= 0 && ptr + NODE_SIZE <= offset) {
-            return true;
-        }
-        throw new RuntimeException("invalid pointer");
+        throw new InvalidAddressException(addr, bytesNeeded, offset, capacity());
     }
 
-    
+    public int getAlignmentWaste() {
+        return alignmentWaste;
+    }
+
+    public void resetAlignmentWaste() {
+        alignmentWaste = 0;
+    }
 }

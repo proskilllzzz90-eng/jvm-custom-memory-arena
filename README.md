@@ -105,7 +105,7 @@ Storage (big-endian approach):
 - Reconstruction: `(byte0 << 24) | (byte1 << 16) | (byte2 << 8) | byte3`
 
 This makes primitive representation and endianness explicit instead of implicit.
-
+```
  
 
 ### 4. Struct-like Layouts (Nodes)
@@ -237,17 +237,6 @@ This demonstrates how real systems handle memory alignment requirements.
 - Not a garbage collector replacement
 
 The implementation prioritizes clarity, correctness, and explicit control over performance or feature completeness.
-
- 
-
-## What This Project Teaches
-
-- How memory is laid out at the byte level
-- Why bounds checking matters
-- How pointers actually work
-- How struct layout is a design decision
-- How data structures are built from raw memory
-- Why high-level languages feel safe
 
  
 

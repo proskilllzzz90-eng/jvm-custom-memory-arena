@@ -32,9 +32,9 @@
 - [x] Test big-endian encoding/decoding
 
 ### 2.2 Add short support (2 bytes)
-- [ ] Implement putShort(int addr, short x)
-- [ ] Implement getShort(int addr)
-- [ ] Test 2-byte big-endian encoding
+- [x] Implement putShort(int addr, short x)
+- [x] Implement getShort(int addr)
+- [x] Test 2-byte big-endian encoding
 
 ### 2.3 Add char support (2 bytes, UTF-16)
 - [ ] Implement putChar(int addr, char c)

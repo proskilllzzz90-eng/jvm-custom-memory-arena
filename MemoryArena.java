@@ -106,6 +106,20 @@ public class MemoryArena {
         return reconstruct;
     }
 
+    public void putShort(int addr, short x) {
+        byte[] bytes = {(byte)((x >>> 8) & 0xFF), (byte)((x >>> 0) & 0xFF)};
+        checkAddr(addr, 2);
+        for (int i = 0; i < 2; i++) {
+            memory[addr + i] = (byte) bytes[i];
+        }
+    }
+
+    public short getShort(int addr) {
+        checkAddr(addr, 2);
+        short reconstruct = (short)(((short)(memory[addr] & 0xFF) << 8) | (short)(memory[addr + 1] & 0xFF));
+        return reconstruct;
+    }
+
     public boolean checkAddr(int addr, int bytesNeeded) {
         if (addr >= 0 && addr + bytesNeeded <= offset) {
             return true;

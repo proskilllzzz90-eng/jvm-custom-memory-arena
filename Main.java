@@ -7,6 +7,7 @@ public class Main {
         testErrorMessages();
         testBigEndianEncoding();
         testLongSupport();
+        testShortSupport();
     }
 
     static void testBasicAllocation() {
@@ -211,6 +212,41 @@ public class Main {
         int addr4 = arena.alloc(8);
         arena.putLong(addr4, zero);
         System.out.println("  Zero stored and retrieved: " + (zero == arena.getLong(addr4)));
+        System.out.println();
+    }
+
+    static void testShortSupport() {
+        System.out.println("Test 7: Short Support (2 bytes)");
+        MemoryArena arena = new MemoryArena(128);
+        
+        int addr = arena.alloc(2);
+        short testValue = (short)0xABCD;
+        arena.putShort(addr, testValue);
+        
+        System.out.println("Storing short value: 0x" + Integer.toHexString(testValue & 0xFFFF) + " at address " + addr);
+        System.out.println("Byte representation (big-endian, 2 bytes):");
+        System.out.println("  memory[" + addr + "] = 0x" + Integer.toHexString(arena.memory[addr] & 0xFF));
+        System.out.println("  memory[" + (addr + 1) + "] = 0x" + Integer.toHexString(arena.memory[addr + 1] & 0xFF));
+        
+        short reconstructed = arena.getShort(addr);
+        System.out.println("Reconstructed value: 0x" + Integer.toHexString(reconstructed & 0xFFFF));
+        System.out.println("Match: " + (testValue == reconstructed));
+        
+        System.out.println("\nTesting edge cases:");
+        short maxShort = Short.MAX_VALUE;
+        int addr2 = arena.alloc(2);
+        arena.putShort(addr2, maxShort);
+        System.out.println("  Max short (" + maxShort + ") stored and retrieved: " + (maxShort == arena.getShort(addr2)));
+        
+        short minShort = Short.MIN_VALUE;
+        int addr3 = arena.alloc(2);
+        arena.putShort(addr3, minShort);
+        System.out.println("  Min short (" + minShort + ") stored and retrieved: " + (minShort == arena.getShort(addr3)));
+        
+        short zero = 0;
+        int addr4 = arena.alloc(2);
+        arena.putShort(addr4, zero);
+        System.out.println("  Zero stored and retrieved: " + (zero == arena.getShort(addr4)));
         System.out.println();
     }
 }
